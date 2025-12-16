@@ -10,19 +10,21 @@ import { useTheme } from './hooks/useTheme';
 import { useSettings } from './hooks/useSettings';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useCommandRouter } from './hooks/useCommandRouter';
+import { BookmarksProvider, useBookmarksContext } from './contexts/BookmarksContext';
 
 type View = 'bookmarks' | 'todo' | 'notes' | 'pomodoro' | 'settings' | null;
 
-function App() {
+function AppContent() {
   const [activeView, setActiveView] = useState<View>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const { settings, updateSettings } = useSettings();
+  const { addBookmark } = useBookmarksContext();
 
   useTheme(settings.theme);
   useKeyboardShortcuts(activeView, setActiveView);
 
-  const { handleCommand } = useCommandRouter(setActiveView);
+  const { handleCommand } = useCommandRouter(setActiveView, { addBookmark });
 
   return (
     <div className="relative h-full w-full text-white">
@@ -55,7 +57,15 @@ function App() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+function App() {
+  return (
+    <BookmarksProvider>
+      <AppContent />
+    </BookmarksProvider>
+  );
+}
+
+export default App;
