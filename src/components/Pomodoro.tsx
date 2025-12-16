@@ -1,10 +1,8 @@
-import { usePomodoro } from '../hooks/usePomodoro';
-import { useAudioNotification } from '../hooks/useAudioNotification';
+import { usePomodoroContext } from '../contexts/PomodoroContext';
 import { formatTime } from '../utils/timeFormatter';
 import ProgressRing from './Pomodoro/ProgressRing';
 
 const Pomodoro = () => {
-  const { playSound } = useAudioNotification();
   const {
     mode,
     timeLeft,
@@ -13,7 +11,7 @@ const Pomodoro = () => {
     toggleTimer,
     resetTimer,
     changeMode,
-  } = usePomodoro(undefined, playSound);
+  } = usePomodoroContext();
 
   return (
     <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-zinc-200 dark:border-zinc-800 p-8 w-full transition-colors">
