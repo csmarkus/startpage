@@ -11,6 +11,7 @@ import { useSettings } from './hooks/useSettings';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useCommandRouter } from './hooks/useCommandRouter';
 import { BookmarksProvider, useBookmarksContext } from './contexts/BookmarksContext';
+import { PomodoroProvider } from './contexts/PomodoroContext';
 
 type View = 'bookmarks' | 'todo' | 'notes' | 'pomodoro' | 'settings' | null;
 
@@ -63,7 +64,9 @@ function AppContent() {
 function App() {
   return (
     <BookmarksProvider>
-      <AppContent />
+      <PomodoroProvider>
+        <AppContent />
+      </PomodoroProvider>
     </BookmarksProvider>
   );
 }
