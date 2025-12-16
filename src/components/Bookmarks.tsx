@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useBookmarks } from '../hooks/useBookmarks';
+import { useBookmarksContext } from '../contexts/BookmarksContext';
 
 const Bookmarks = () => {
-  const { bookmarks, addBookmark, deleteBookmark, isLoading } = useBookmarks();
+  const { bookmarks, addBookmark, deleteBookmark, isLoading } = useBookmarksContext();
   const [url, setUrl] = useState('');
 
   const handleAddBookmark = async (e: React.FormEvent) => {
