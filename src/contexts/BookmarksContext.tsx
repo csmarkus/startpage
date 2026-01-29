@@ -11,7 +11,7 @@ const DEFAULT_BOOKMARKS: Bookmark[] = [
 
 interface BookmarksContextType {
   bookmarks: Bookmark[];
-  addBookmark: (url: string) => Promise<void>;
+  addBookmark: (url: string, manualTitle?: string) => Promise<void>;
   deleteBookmark: (id: number) => void;
   isLoading: boolean;
 }
@@ -22,20 +22,26 @@ export function BookmarksProvider({ children }: { children: ReactNode }) {
   const [bookmarks, setBookmarks] = useLocalStorage<Bookmark[]>('bookmarks', DEFAULT_BOOKMARKS);
   const [isLoading, setIsLoading] = useState(false);
 
-  const addBookmark = async (url: string) => {
+  const addBookmark = async (url: string, manualTitle?: string) => {
     if (!url.trim()) return;
 
     setIsLoading(true);
 
-    let title = extractHostname(url);
+    let title: string;
 
-    try {
-      const metadata = await fetchUrlMetadata(url);
-      if (metadata?.title) {
-        title = metadata.title;
+    if (manualTitle?.trim()) {
+      title = manualTitle.trim();
+    } else {
+      title = extractHostname(url);
+
+      try {
+        const metadata = await fetchUrlMetadata(url);
+        if (metadata?.title) {
+          title = metadata.title;
+        }
+      } catch (error) {
+        console.error('Failed to fetch title:', error);
       }
-    } catch (error) {
-      console.error('Failed to fetch title:', error);
     }
 
     const newBookmark: Bookmark = {
