@@ -57,14 +57,18 @@ const Bookmarks = () => {
           </button>
         </div>
         <div className="flex items-center gap-2">
-          <label className="flex items-center gap-2 cursor-pointer text-sm text-zinc-600 dark:text-zinc-400">
-            <input
-              type="checkbox"
-              checked={autoFetchTitle}
-              onChange={(e) => setAutoFetchTitle(e.target.checked)}
-              disabled={isLoading}
-              className="w-4 h-4 rounded border-zinc-300 dark:border-zinc-600 text-blue-600 focus:ring-blue-500 cursor-pointer"
-            />
+          <label className="inline-flex items-center gap-2 cursor-pointer text-sm text-zinc-600 dark:text-zinc-400">
+            <span className="relative">
+              <input
+                type="checkbox"
+                checked={autoFetchTitle}
+                onChange={(e) => setAutoFetchTitle(e.target.checked)}
+                disabled={isLoading}
+                className="sr-only peer"
+              />
+              <div className="w-9 h-5 bg-zinc-300 dark:bg-zinc-600 rounded-full peer peer-checked:bg-blue-600 peer-disabled:opacity-50 transition-colors"></div>
+              <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow peer-checked:translate-x-4 transition-transform"></div>
+            </span>
             Auto-fetch title
           </label>
         </div>
