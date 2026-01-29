@@ -17,22 +17,28 @@ export function useBookmarks() {
   const [bookmarks, setBookmarks] = useLocalStorage<Bookmark[]>('bookmarks', DEFAULT_BOOKMARKS);
   const [isLoading, setIsLoading] = useState(false);
 
-  const addBookmark = async (url: string) => {
+  const addBookmark = async (url: string, manualTitle?: string) => {
     if (!url.trim()) return;
 
     setIsLoading(true);
 
-    // Default to hostname
-    let title = extractHostname(url);
+    let title: string;
 
-    // Try to fetch actual title
-    try {
-      const metadata = await fetchUrlMetadata(url);
-      if (metadata?.title) {
-        title = metadata.title;
+    if (manualTitle?.trim()) {
+      title = manualTitle.trim();
+    } else {
+      // Default to hostname
+      title = extractHostname(url);
+
+      // Try to fetch actual title
+      try {
+        const metadata = await fetchUrlMetadata(url);
+        if (metadata?.title) {
+          title = metadata.title;
+        }
+      } catch (error) {
+        console.error('Failed to fetch title:', error);
       }
-    } catch (error) {
-      console.error('Failed to fetch title:', error);
     }
 
     const newBookmark: Bookmark = {

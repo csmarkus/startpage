@@ -4,11 +4,14 @@ import { useBookmarksContext } from '../contexts/BookmarksContext';
 const Bookmarks = () => {
   const { bookmarks, addBookmark, deleteBookmark, isLoading } = useBookmarksContext();
   const [url, setUrl] = useState('');
+  const [autoFetchTitle, setAutoFetchTitle] = useState(true);
+  const [manualTitle, setManualTitle] = useState('');
 
   const handleAddBookmark = async (e: React.FormEvent) => {
     e.preventDefault();
-    await addBookmark(url);
+    await addBookmark(url, autoFetchTitle ? undefined : manualTitle);
     setUrl('');
+    setManualTitle('');
   };
 
   return (
@@ -29,28 +32,58 @@ const Bookmarks = () => {
           </div>
         ))}
       </div>
-      <form onSubmit={handleAddBookmark} className="mt-4 flex gap-2">
-        <input
-          type="text"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="URL"
-          autoComplete="off"
-          data-1p-ignore
-          disabled={isLoading}
-          className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 text-zinc-800 dark:text-zinc-100 placeholder-zinc-400 p-2 rounded w-full focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-50"
-        />
-        <button 
-          type="submit" 
-          disabled={isLoading}
-          className="bg-blue-600 hover:bg-blue-500 p-2 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-w-[60px] flex items-center justify-center text-white"
-        >
-          {isLoading ? (
-            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-          ) : (
-            'Add'
-          )}
-        </button>
+      <form onSubmit={handleAddBookmark} className="mt-4 flex flex-col gap-3">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="URL"
+            autoComplete="off"
+            data-1p-ignore
+            disabled={isLoading}
+            className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 text-zinc-800 dark:text-zinc-100 placeholder-zinc-400 p-2 rounded w-full focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-50"
+          />
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="bg-blue-600 hover:bg-blue-500 p-2 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-w-[60px] flex items-center justify-center text-white"
+          >
+            {isLoading ? (
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              'Add'
+            )}
+          </button>
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="inline-flex items-center gap-2 cursor-pointer text-sm text-zinc-600 dark:text-zinc-400">
+            <span className="relative">
+              <input
+                type="checkbox"
+                checked={autoFetchTitle}
+                onChange={(e) => setAutoFetchTitle(e.target.checked)}
+                disabled={isLoading}
+                className="sr-only peer"
+              />
+              <div className="w-9 h-5 bg-zinc-300 dark:bg-zinc-600 rounded-full peer peer-checked:bg-blue-600 peer-disabled:opacity-50 transition-colors"></div>
+              <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow peer-checked:translate-x-4 transition-transform"></div>
+            </span>
+            Auto-fetch title
+          </label>
+        </div>
+        {!autoFetchTitle && (
+          <input
+            type="text"
+            value={manualTitle}
+            onChange={(e) => setManualTitle(e.target.value)}
+            placeholder="Title"
+            autoComplete="off"
+            data-1p-ignore
+            disabled={isLoading}
+            className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 text-zinc-800 dark:text-zinc-100 placeholder-zinc-400 p-2 rounded w-full focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-50"
+          />
+        )}
       </form>
     </div>
   );
